@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ConfirmActivity extends AppCompatActivity {
+
+    public final String strDest = "0641206582";
 
     TextView firstname, lastname, phone, menuSelected, totalCost;
     Button buttonBack, buttonValidate;
@@ -58,6 +62,14 @@ public class ConfirmActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent viewLastPage = new Intent(ConfirmActivity.this, LastActivity.class);
+                try {
+                    String strSms = "Un client au nom de " + prenomValue + " " + nomValue
+                            + " a fait la commande suivante : " + menuSelectedValue + ".";
+                    SmsManager smgr = SmsManager.getDefault();
+                    smgr.sendTextMessage(strDest, null, strSms, null, null);
+                } catch (Exception e){
+                    Toast.makeText(ConfirmActivity.this, "Failed to Send to " + strDest +". Try again", Toast.LENGTH_SHORT).show();
+                }
                 startActivity(viewLastPage);
             }
         });
